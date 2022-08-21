@@ -1,76 +1,62 @@
-# Natural Language Processing and Unsupervised Learning Project - Song Recommendation 
+# Natural Language Processing and Unsupervised Learning Project - Song Recommendation System
 
 ## Abstract
-The goal of this project is to create a song recommendation model based on lyrics. The dataset I used contains around sixteen hundreds data points with features like the lyric,artist,release date, etc. The dataset is established from ten singers including Ariana Grande, Beyonce, Dua Lipa, Lady Gaga,Taylor Swift, Ed Sheeran,Eminem,Justin Bieber,Maroon 5, and Drake.
-
- Before fitting the data into a top modeling algorithm, I have done the preprocessing on the lyric. I used Tfidf vectorizer along with the lemmatization tokenizer and the extend stop_word list to get the frequency score of each word in the lyrics.  After that, I fit it into three topic models : NMF (Non-Negative Matrix Factorization),Latent Dirichlet Allocation (LDA), and CorEx. I chose to use NMF because it is more interpretable. The NMF model gives me the relatability of each song to the topics. I interpret the topics by looking at the top ten song lyrics with the highest value of a topic, read the lyrics, and determine the theme. After determining the theme, I convert the NMF score into a dataframe and fit it to the cosine similarity metric. I get a dataframe of the song similarity based on lyric. At the end, I created a function using the cosine similarity result to take a song name, and generate seven recommended songs.
+The goal of this project is to create a song recommendation model based on the song elements like a key, tempo, acoustics, etc., along with the lyrics. The datasets I used are the data.csv which contains the features of the song like valence, tempo, danceability, etc., and the lyrics-data.csv which has the information of the song lyrics and artist names. I merged them into a final dataset that contained all the song features including the artist name, and the song name.
+Since the lyrics are not numbers and they aren't comparable, I have to convert them into something comparable. Therefore, I used Tfidf vectorizer along with the lemmatization tokenizer and the stop_word list provided by nltk to get the frequency score of each word in the lyrics. Then, I fit it into the NMF (Non-Negative Matrix Factorization) model to get the relatability of each song to the topics. I merged the NMF scores with the song features and fit them to the cosine similarity metric. The cosine similarity metric gives me the result of songs that share similar features. My recommendation system is based on the result of cosine similarity and will generate 10 similar songs.
 
  ## Design
- A song is made of music and the lyric. I believe the lyric represents the theme of the song. I assume that a person listen to a song partially because of its theme, therefore, I will create a recommendation algorithm based on the lyrics to generate songs with similar theme and recommend them to that person.
+ A song is made of music and the lyric. I believe the all elements of the song represent the song's uniqueness. I assume that a person listen to a song partially because of its uniqueness, therefore, I created a recommendation algorithm based off on song elements to recommend songs with similar identities to the users.
 
  ## Data
- ### Song Lyrics Dataset from Kaggle
- - Ariana Grande
- - Beyonce
- - Dua Lipa
- - Lady Gaga
- - Taylor Swift
- - Ed Sheeran
- - Eminem
- - Justin Bieber
- - Marron 5
- - Drake
-
- - 1526 rows with 8 columns
- - feature highlight : Lyric 
+ ### data.csv 
+ - 170653 rows with 18 columns
+ - feature highlight : tempo, acousticness, danceability, key
+ ### lyrics-data.csv
+ - 379931 rows with 5 columns
+ - feature highlight : Lyric , SName (song name)
+ ### genres_v2.csv
+ - 42305 rows with 21 columns
+ - feature highlight : Genre, song_name 
 
  ## Algorithms
-1. Use python to concatenate the small individual singer datasets into one big dataset
-2. Do a simple explordatory data analysis , dropping the missing values, dropping the duplicated title
-3. Word preprocessing on the lyrics create a new column called 'vec' that has the punctations, non-english words removed
+1. Use python to merge data.csv,lyrics-data.csv,and genres_v2.csv into the big dataset that I will use for the rest of the project
+2. Do a simple explordatory data analysis , dropping missing values and duplicated songs (some song may have performed byy different singers, so only keeping the oldest one), dropping non-english songs since I only want to focus on english songs, and do a quick data engineering, dropping some features that I think is vague and useless
+3. Word preprocessing on the lyrics applying functions to remove punctuations, to make strings lower-case and remove the '\n' sign from the lyrics, create a new column called 'vec' to store the new word-preprocessed lyric
 4. Create a lemmatizer tokenizer function based on the nltk WordNetLemmatizer
-5. create a stop word list and extend it with words that are meaningless
-6. import the TfidfVectorizer from sklearn and set the stop words to be out stop word list, and the tokenizer as the lemmatizer tokenizer 
-7. Use TfidfVectorizer to fit_transform the 'vec' column and set it as lyrics_matrix
-8. import NMF from sklearn and choose the n_components = 8 (optional, 8 is my preference)
-9. use NMF to fit transform the lyrics_matrix and name it as topic_values
+5. Create a stop word list for english only
+6. Import the TfidfVectorizer from sklearn and set the stop words to be our stop word list, and the tokenizer as the lemmatizer tokenizer 
+7. Use TfidfVectorizer to fit_transform the 'vec' column which is the columns that I did the word-preprocessing on and name it as lyrics_matrix
+8. Import NMF from sklearn and choose the n_components to 8 (optional, 8 is my preference)
+9. Use NMF to fit transform the lyrics_matrix and name it as topic_values and convert it into a dataframe called df_topic 
+10. Merge the song dataset with the df_topic dataframe and drop the lyric column because the df_topic dataset represents the topic values of lyrics and merge with the genres dataframe to get the genre for each song
 
-10. Evaluate the top twelve words from each topic
-![topics](https://user-images.githubusercontent.com/63031028/119936855-a7dba780-bf3e-11eb-8879-c3e0a2d2206e.png)
-11. Evaluate the top lyrics from each topic 
-- Example of topic 8 
-![lyrics](https://user-images.githubusercontent.com/63031028/119937193-37815600-bf3f-11eb-8ca1-f76f1fa1243f.png)
+11. Get the dummy-variables for all the categorical columns 
+12. Drop the name column because cosine_similarity cannot take strings and our dataframe is all settled (with all the categorical columns as dummy-variables, lyrics become topic_values, along with the numeric columns stated the way they were)
 
-After evaluating the most used words, top lyrics, and even listen to the song , I finally come up with the label of each topic which are ['Rap','Falling in love','Girl','Missing someone','Confessing','Needy','Regret','Breaking up'] and I use the lables as columns and created a dataframe called df_topic which maps the topic_values, and the topic labels
+<img width="848" alt="Screen Shot 2022-08-20 at 8 37 57 PM" src="https://user-images.githubusercontent.com/63031028/185774359-a513600e-7941-4baa-b874-528772293a25.png">
 
-12. tried the same process on LDA and CoRex, but the topics aren't as interpretable as NMF, so decided to use NMF
 
-13. import cosine_similarity from sklearn 
-14. I rename the df_topic as lyric_matrix (with no s) , and then fit it into the cosine similarity metric as saved it as cos_sim
+13. Create a reverse mapping of song titles to indices. By this, we can easily find the title of the songs based on the index, and be used in the function that we are going to create
 
-15. cos_sim is an array that tells me the similarity of songs
-16. Lastly, create a function called recommendation which will take the lyric_matrix, and the song database ,to generate the songs that aresimilar to the input song
-![recfun](https://user-images.githubusercontent.com/63031028/119939567-ebd0ab80-bf42-11eb-9974-91936fd77f4a.png)
 
-17. Here is the result:
+14. Import cosine_similarity from sklearn 
+15. Create a function called recommend_song which takes a song name and return 10 songs based on the similarity score after feeding the cosine_similarity model with the dataframe we created
+<img width="366" alt="Screen Shot 2022-08-20 at 8 42 51 PM" src="https://user-images.githubusercontent.com/63031028/185774480-913fa4f3-c468-4b70-8ac6-1ffbb24e83dd.png">
 
-![input](https://user-images.githubusercontent.com/63031028/119939797-39e5af00-bf43-11eb-8e23-e705ad04ff3b.png)
 
-![output](https://user-images.githubusercontent.com/63031028/119940152-a52f8100-bf43-11eb-8d69-09729ce1817d.png)
 
 ## Tools
-- Python Numpy , Pandas - data cleaning, data manipulation 
+- Python Numpy,Pandas - data cleaning, data manipulation,data merging
 
-- Nltk - lemmatizer
+- Nltk - WordNetLemmatizer,stopwords
 
-- Sklearn - Topic Models(NMF,LDA) , Dimensionality reduction(Tfidf), cosine similarity
+- Sklearn - Topic Models(NMF) , Dimensionality reduction(Tfidf), cosine similarity
 
-- Corextopic - topic model (CoRex)
+
 
 ## Communication
-The recommendation function is based on the similarity of the lyrics, therefore, the suggested songs may from different genres and have a big difference in the speed of the song
+The recommendation function is based on the similarity of all the song features, therefore, the suggested songs contained very similar features to the input song
 
 ## Further steps
-- add more songs to the dataset
-- put the song tempo, and song genre on the cosine similarity metric because these two things should be taken as consideration on recommending songs
 - Try different number of components 
+- Dig into the meaning of the topics
