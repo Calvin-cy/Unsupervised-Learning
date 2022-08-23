@@ -1,7 +1,7 @@
 # Natural Language Processing and Unsupervised Learning Project - Song Recommendation System
 
 ## Abstract
-The goal of this project is to create a song recommendation model based on the song elements like a key, tempo, acoustics, etc., along with the lyrics. The datasets I used are the data.csv which contains the features of the song like valence, tempo, danceability, etc., and the lyrics-data.csv which has the information of the song lyrics and artist names. I merged them into a final dataset that contained all the song features including the artist name, and the song name.
+The goal of this project is to create a content-based song recommendation system based on the song elements like a key, tempo, acoustics, etc., along with the lyrics. The datasets I used are the data.csv which contains the features of the song like valence, tempo, danceability, etc., and the lyrics-data.csv which has the information of the song lyrics and artist names. I merged them into a final dataset that contained all the song features including the artist name, and the song name.
 Since the lyrics are not numbers and they aren't comparable, I have to convert them into something comparable. Therefore, I used Tfidf vectorizer along with the lemmatization tokenizer and the stop_word list provided by nltk to get the frequency score of each word in the lyrics. Then, I fit it into the NMF (Non-Negative Matrix Factorization) model to get the relatability of each song to the topics. I merged the NMF scores with the song features and fit them to the cosine similarity metric. The cosine similarity metric gives me the result of songs that share similar features. My recommendation system is based on the result of cosine similarity and will generate 10 similar songs.
 
  ## Design
@@ -62,5 +62,5 @@ Since the lyrics are not numbers and they aren't comparable, I have to convert t
 The recommendation function is based on the similarity of all the song features, therefore, the suggested songs contained very similar features to the input song
 
 ## Further steps
-- Since the dataset I have only contains song features , I didn't dig into user-behavior. I believe user-behavior is really important,so if i can get the dataset that has all the user information, I can divide them into different clusters that share similar song preferences and recommend songs based on other users from the same cluster 
+- Since the dataset I have only contains song features , I can only do a conten-based model.If i can get the dataset that has all the user information, I can do a collaborative model by dividing the users into different clusters that share similar song preferences and recommend songs based on other users from the same cluster 
 
