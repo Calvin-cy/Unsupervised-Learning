@@ -62,5 +62,5 @@ Since the lyrics are not numbers and they aren't comparable, I have to convert t
 The recommendation function is based on the similarity of all the song features, therefore, the suggested songs contained very similar features to the input song
 
 ## Further steps
-- Since the dataset I have only contains song features , I can only do a conten-based model. If i can get the dataset that has all the user information, I can do a collaborative model by dividing the users into different clusters that share similar song preferences and recommend songs based on other users from the same cluster 
+- Since the dataset I have only contains song features , I can only do a content-based model. If i can get the dataset that has all the user information, I can do a collaborative model by dividing the users into different clusters that share similar song preferences and recommend songs based on other users from the same cluster 
 
