@@ -23,25 +23,29 @@ Since the lyrics are not numbers and they aren't comparable, I have to convert t
 2. Do a simple explordatory data analysis , dropping missing values and duplicated songs (some song may have performed byy different singers, so only keeping the oldest one), dropping non-english songs since I only want to focus on english songs, and do a quick data engineering, dropping some features that I think is vague and useless
 3. Word preprocessing on the lyrics applying functions to remove punctuations, to make strings lower-case and remove the '\n' sign from the lyrics, create a new column called 'vec' to store the new word-preprocessed lyric
 4. Create a lemmatizer tokenizer function based on the nltk WordNetLemmatizer
-5. Create a stop word list for english only
+5. Create a stop word list for english and extend it with words that I think is meaningless
 6. Import the TfidfVectorizer from sklearn and set the stop words to be our stop word list, and the tokenizer as the lemmatizer tokenizer 
 7. Use TfidfVectorizer to fit_transform the 'vec' column which is the columns that I did the word-preprocessing on and name it as lyrics_matrix
-8. Import NMF from sklearn and choose the n_components to 8 (optional, 8 is my preference)
-9. Use NMF to fit transform the lyrics_matrix and name it as topic_values and convert it into a dataframe called df_topic 
-10. Merge the song dataset with the df_topic dataframe and drop the lyric column because the df_topic dataset represents the topic values of lyrics and merge with the genres dataframe to get the genre for each song
+8. Import NMF from sklearn and choose the n_components to 6 (optional, 6 is my preference)
+9. Use NMF to fit transform the lyrics_matrix and name it as topic_values and convert it into a dataframe called topic_matrix_df 
+10. Create a dataframe called word_topic_matrix that gives us the weight of each word from the topic
+11. Create a function called top_words that takes each topic from top_matrix_df and sort the top 10 words appearing from it
+12. Evaluate the top words and come up with the theme for each topic
+13. Merge the song dataset with the df_topic dataframe and drop the lyric column because the df_topic dataset represents the topic values of lyrics and merge with the genres dataframe to get the genre for each song
+14. Create a functon called decade and use it to get the decade for each song and the year column
 
-11. Get the dummy-variables for all the categorical columns 
-12. Drop the name column because cosine_similarity cannot take strings and our dataframe is all settled (with all the categorical columns as dummy-variables, lyrics become topic_values, along with the numeric columns stated the way they were)
+15. Get the dummy-variables for all the categorical columns 
+16. Drop the name and artist columns because cosine_similarity cannot take strings and our dataframe is all settled (with all the categorical columns as dummy-variables, lyrics become topic_values, along with the numeric columns stated the way they were)
 
-<img width="848" alt="Screen Shot 2022-08-20 at 8 37 57 PM" src="https://user-images.githubusercontent.com/63031028/185774359-a513600e-7941-4baa-b874-528772293a25.png">
-
-
-13. Create a reverse mapping of song titles to indices. By this, we can easily find the title of the songs based on the index, and be used in the function that we are going to create
+<img width="815" alt="Screen Shot 2022-08-22 at 4 46 02 PM" src="https://user-images.githubusercontent.com/63031028/186038901-cb646088-34c9-40a9-a14a-229c04d17816.png">
 
 
-14. Import cosine_similarity from sklearn 
-15. Create a function called recommend_song which takes a song name and return 10 songs based on the similarity score after feeding the cosine_similarity model with the dataframe we created
-<img width="366" alt="Screen Shot 2022-08-20 at 8 42 51 PM" src="https://user-images.githubusercontent.com/63031028/185774480-913fa4f3-c468-4b70-8ac6-1ffbb24e83dd.png">
+17. Create a reverse mapping of song titles to indices. By this, we can easily find the title of the songs based on the index, and be used in the function that we are going to create
+
+
+18. Import cosine_similarity from sklearn 
+19. Create a function called recommend_song which takes a song name and return 10 songs based on the similarity score after feeding the cosine_similarity model with the dataframe we created
+<img width="351" alt="Screen Shot 2022-08-22 at 4 51 56 PM" src="https://user-images.githubusercontent.com/63031028/186039386-5668e366-400b-4e10-844f-cb8ccbfe859f.png">
 
 
 
@@ -58,5 +62,5 @@ Since the lyrics are not numbers and they aren't comparable, I have to convert t
 The recommendation function is based on the similarity of all the song features, therefore, the suggested songs contained very similar features to the input song
 
 ## Further steps
-- Try different number of components 
-- Dig into the meaning of the topics
+- Since the dataset I have only contains song features , I didn't dig into user-behavior. I believe user-behavior is really important,so if i can get the dataset that has all the user information, I can divide them into different clusters that share similar song preferences and recommend songs based on other users from the same cluster 
+
