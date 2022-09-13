@@ -1,5 +1,5 @@
 ## MVP
-The goal of this project is to do a topic modeling on the lyrics of different genres and decades, and intepret the topics to see if different genres uses different words or if different time period uses different words. 
+The goal of this project is to use Natural Language processing to create a song recommendation system based on the song contents
 
 So far, I have done the topic modelling on different genres.
 Some words are used across all the genres. The words heart and break appears to be an topic for all the genres except for hiphop.
