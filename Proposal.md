@@ -1,6 +1,6 @@
 # Unsupervised Project Proposal
 ## Question/need
-- The purpose of this project is to us evaluate the lyrics of different genres to see the word choices of different genre during different decade
+- The purpose of this project is to create a content-based recommendation system
 - Will do it in different languages (if have time)
 - Songwriters, music companies will find this project useful by knowing what word should they use more often when writing their songs
 - Historian can find this project useful because the common words from lyrics in specific decade can reflect to people's life during that time
@@ -9,9 +9,16 @@
     - If the most common word in one language is 'love', it can mean that the culture of this language emphasizes on loving each other 
 
 ## Data Description 
-- Lyrics(1950-2019) dataset from data mendeley
-- 31 columns
-- 28372 rows
+- data.csv 
+- 170653 rows with 18 columns
+- feature highlight : tempo, acousticness, danceability, key
+- lyrics-data.csv
+- 379931 rows with 5 columns
+- feature highlight : Lyric , SName (song name)
+- genres_v2.csv
+- 42305 rows with 21 columns
+- feature highlight : Genre, song_name
+
 - Genre: 'pop', 'country', 'blues', 'jazz', 'reggae', 'rock', 'hip hop'
 - Spliting up the dataset into different genres
 - Finding the most used word for each genre within decade 
@@ -19,10 +26,12 @@
 
 ## Tools
 - Python (Jupyter Nobebook)
-- Pandas and Numpy : Examine the data 
-- Sklearn for the NLP packages
-- ntlk for tokenization
+- Pandas and Numpy : data cleaning, data manipulation,data merging
+- Sklearn : Topic Models(NMF) , Dimensionality reduction(Tfidf), cosine similarity
+
+- Nltk: WordNetLemmatizer,stopwords
 - re , string for text preprocessing
 
+
 ## MVP
-Find the common words of each genre during each decade and use topic modeling to classify the lyrics into different groups (The vibe of the music )
+Create a content-based recommendation system using cosine-similarity to find songs that are similar to the one that the user is listening to 
